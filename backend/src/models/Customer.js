@@ -66,6 +66,7 @@ const customerSchema = new mongoose.Schema({
 // Indexes for search
 customerSchema.index({ name: 'text', businessName: 'text', email: 'text', mobile: 'text' });
 
-const Customer = mongoose.model('Customer', customerSchema);
+// Check if model already exists before creating it
+const Customer = mongoose.models.Customer || mongoose.model('Customer', customerSchema);
 
 export default Customer;

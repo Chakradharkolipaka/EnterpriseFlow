@@ -36,6 +36,7 @@ const stockMovementSchema = new mongoose.Schema({
 // Index for querying by product
 stockMovementSchema.index({ product: 1, timestamp: -1 });
 
-const StockMovement = mongoose.model('StockMovement', stockMovementSchema);
+// Check if model already exists before creating it
+const StockMovement = mongoose.models.StockMovement || mongoose.model('StockMovement', stockMovementSchema);
 
 export default StockMovement;

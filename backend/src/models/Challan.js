@@ -75,6 +75,7 @@ challanSchema.index({ challanNumber: 1 });
 challanSchema.index({ customer: 1 });
 challanSchema.index({ status: 1 });
 
-const Challan = mongoose.model('Challan', challanSchema);
+// Check if model already exists before creating it
+const Challan = mongoose.models.Challan || mongoose.model('Challan', challanSchema);
 
 export default Challan;

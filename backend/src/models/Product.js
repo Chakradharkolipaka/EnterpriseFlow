@@ -46,6 +46,7 @@ const productSchema = new mongoose.Schema({
 productSchema.index({ name: 'text', sku: 'text', category: 'text' });
 productSchema.index({ sku: 1 });
 
-const Product = mongoose.model('Product', productSchema);
+// Check if model already exists before creating it
+const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
 
 export default Product;
