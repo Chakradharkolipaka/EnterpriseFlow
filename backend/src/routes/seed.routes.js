@@ -1,4 +1,5 @@
 import express from 'express';
+import connectDB from '../config/db.js';
 import User from '../models/User.js';
 import Customer from '../models/Customer.js';
 import Product from '../models/Product.js';
@@ -9,6 +10,7 @@ const router = express.Router();
 // Quick test endpoint
 router.get('/test-db', async (req, res) => {
   try {
+    await connectDB();
     const userCount = await User.countDocuments();
     const customerCount = await Customer.countDocuments();
     const productCount = await Product.countDocuments();
@@ -34,6 +36,8 @@ router.get('/test-db', async (req, res) => {
 // Temporary seed endpoint - REMOVE AFTER SEEDING
 router.post('/seed-database', async (req, res) => {
   try {
+    console.log('Connecting to database...');
+    await connectDB();
     console.log('Starting database seed...');
 
     // Clear existing data with timeout protection

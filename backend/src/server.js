@@ -7,8 +7,8 @@ dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 
-// Connect to MongoDB
-connectDB();
+// Connect to MongoDB (async for serverless compatibility)
+connectDB().catch(err => console.error('MongoDB connection error:', err));
 
 // Start server
 app.listen(PORT, () => {
