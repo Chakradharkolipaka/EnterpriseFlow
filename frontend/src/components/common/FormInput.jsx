@@ -82,3 +82,13 @@ export function DateInput({ label, id, error, ...props }) {
     </div>
   );
 }
+
+// Default export as an object with all components
+const FormInput = {
+  TextInput,
+  SelectInput,
+  TextArea,
+  DateInput
+};
+
+export default FormInput;

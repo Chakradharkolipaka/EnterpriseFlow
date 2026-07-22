@@ -5,6 +5,7 @@ import authRoutes from './routes/auth.routes.js';
 import customerRoutes from './routes/customer.routes.js';
 import productRoutes from './routes/product.routes.js';
 import challanRoutes from './routes/challan.routes.js';
+import seedRoutes from './routes/seed.routes.js';
 
 const app = express();
 
@@ -23,7 +24,12 @@ app.get('/api/health', (req, res) => {
   res.json({ 
     success: true, 
     message: 'API is running',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    env: {
+      nodeEnv: process.env.NODE_ENV,
+      hasMongoUri: !!process.env.MONGODB_URI,
+      hasJwtSecret: !!process.env.JWT_SECRET
+    }
   });
 });
 
@@ -32,6 +38,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/challans', challanRoutes);
+app.use('/api/admin', seedRoutes); // Temporary seed route
 
 // 404 handler
 app.use((req, res) => {
