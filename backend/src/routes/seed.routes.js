@@ -6,20 +6,46 @@ import Counter from '../models/Counter.js';
 
 const router = express.Router();
 
+// Quick test endpoint
+router.get('/test-db', async (req, res) => {
+  try {
+    const userCount = await User.countDocuments();
+    const customerCount = await Customer.countDocuments();
+    const productCount = await Product.countDocuments();
+    
+    res.status(200).json({
+      success: true,
+      message: 'Database connection works',
+      data: {
+        users: userCount,
+        customers: customerCount,
+        products: productCount
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Database connection failed',
+      error: error.message
+    });
+  }
+});
+
 // Temporary seed endpoint - REMOVE AFTER SEEDING
 router.post('/seed-database', async (req, res) => {
   try {
     console.log('Starting database seed...');
 
-    // Clear existing data
-    await Promise.all([
-      User.deleteMany({}),
-      Customer.deleteMany({}),
-      Product.deleteMany({}),
-      Counter.deleteMany({})
-    ]);
+    // Clear existing data with timeout protection
+    console.log('Clearing existing data...');
+    await User.deleteMany({});
+    await Customer.deleteMany({});
+    await Product.deleteMany({});
+    await Counter.deleteMany({});
+    console.log('Cleared successfully');
 
     // Create users
+    console.log('Creating users...');
     const users = [
       {
         name: 'Admin User',
@@ -50,8 +76,10 @@ router.post('/seed-database', async (req, res) => {
     for (const userData of users) {
       await User.create(userData);
     }
+    console.log('Users created');
 
     // Create customers
+    console.log('Creating customers...');
     const customers = [
       {
         name: 'Rajesh Kumar',
@@ -92,8 +120,10 @@ router.post('/seed-database', async (req, res) => {
     ];
 
     await Customer.insertMany(customers);
+    console.log('Customers created');
 
     // Create products
+    console.log('Creating products...');
     const products = [
       {
         name: 'Laptop HP 15s',
@@ -162,9 +192,12 @@ router.post('/seed-database', async (req, res) => {
     ];
 
     await Product.insertMany(products);
+    console.log('Products created');
 
     // Initialize counter
+    console.log('Creating counter...');
     await Counter.create({ year: new Date().getFullYear(), sequence: 0 });
+    console.log('Counter created');
 
     res.status(200).json({
       success: true,
