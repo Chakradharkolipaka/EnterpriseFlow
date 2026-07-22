@@ -39,9 +39,19 @@ router.post('/seed-database', async (req, res) => {
   try {
     console.log('Connecting to database...');
     await connectDB();
+    
+    // Verify connection is fully ready before proceeding
+    if (mongoose.connection.readyState !== 1) {
+      await new Promise((resolve, reject) => {
+        mongoose.connection.on('connected', resolve);
+        mongoose.connection.on('error', reject);
+        setTimeout(() => reject(new Error('DB connection timeout')), 15000);
+      });
+    }
+    console.log('DB readyState:', mongoose.connection.readyState);
     console.log('Starting database seed...');
 
-    // Clear existing data with timeout protection
+    // Clear existing data
     console.log('Clearing existing data...');
     await User.deleteMany({});
     await Customer.deleteMany({});

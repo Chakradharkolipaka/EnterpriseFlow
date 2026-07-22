@@ -1,32 +1,42 @@
 import mongoose from 'mongoose';
 
-let isConnected = false;
+// Cache the connection promise to handle concurrent requests in serverless
+let cached = global._mongooseConnection;
+
+if (!cached) {
+  cached = global._mongooseConnection = { conn: null, promise: null };
+}
 
 const connectDB = async () => {
-  // If already connected, return
-  if (isConnected) {
-    console.log('Using existing database connection');
-    return;
+  // Return cached connection if available
+  if (cached.conn) {
+    return cached.conn;
   }
 
-  // If connecting, wait for it
-  if (mongoose.connection.readyState === 1) {
-    isConnected = true;
-    return;
+  // If a connection is already in progress, await the same promise
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+      maxPoolSize: 1,
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+    };
+
+    cached.promise = mongoose.connect(process.env.MONGODB_URI, opts)
+      .then((mongooseInstance) => {
+        console.log(`MongoDB Connected: ${mongooseInstance.connection.host}`);
+        return mongooseInstance;
+      })
+      .catch((error) => {
+        // Reset promise so next invocation retries
+        cached.promise = null;
+        console.error(`MongoDB connection error: ${error.message}`);
+        throw error;
+      });
   }
 
-  try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI, {
-      bufferCommands: false, // Disable buffering for serverless
-      maxPoolSize: 1 // Limit pool size for serverless
-    });
-    
-    isConnected = true;
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (error) {
-    console.error(`Error: ${error.message}`);
-    throw error;
-  }
+  cached.conn = await cached.promise;
+  return cached.conn;
 };
 
 export default connectDB;
