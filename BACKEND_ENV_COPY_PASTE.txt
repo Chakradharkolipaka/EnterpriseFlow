@@ -1,0 +1,36 @@
+BACKEND ENVIRONMENT VARIABLES - COPY EACH VALUE EXACTLY
+========================================================
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+KEY: MONGODB_URI
+VALUE:
+mongodb+srv://assesments:Chakravarthi@myatlasclusteredu.stzff.mongodb.net/erp_crm_prod?retryWrites=true&w=majority
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+KEY: JWT_SECRET
+VALUE:
+dev_only_secret_change_before_deploy_fa98sd7f9a8sd7f98asd7f98asd7f
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+KEY: JWT_EXPIRES_IN
+VALUE:
+7d
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+KEY: CORS_ORIGIN
+VALUE:
+*
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+KEY: NODE_ENV
+VALUE:
+production
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+TOTAL: 5 variables

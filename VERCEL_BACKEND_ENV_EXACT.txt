@@ -1,0 +1,91 @@
+╔═══════════════════════════════════════════════════════════════╗
+║     Vercel Backend Environment Variables - EXACT VALUES       ║
+║              Copy these EXACTLY as shown below                ║
+╚═══════════════════════════════════════════════════════════════╝
+
+⚠️  IMPORTANT: Copy each value EXACTLY as shown (no extra spaces)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KEY 1: MONGODB_URI
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+mongodb+srv://assesments:Chakravarthi@myatlasclusteredu.stzff.mongodb.net/erp_crm_prod?retryWrites=true&w=majority
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KEY 2: JWT_SECRET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+dev_only_secret_change_before_deploy_fa98sd7f9a8sd7f98asd7f98asd7f
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KEY 3: JWT_EXPIRES_IN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+7d
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KEY 4: CORS_ORIGIN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+*
+
+⚠️  Note: After frontend deploys, change this to your frontend URL
+    Example: https://enterpriseflow-xxx.vercel.app
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KEY 5: NODE_ENV
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+production
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📋 SUMMARY TABLE (for reference)
+
+┌──────────────────┬──────────────────────────────────────────────────┐
+│ Key              │ Value                                            │
+├──────────────────┼──────────────────────────────────────────────────┤
+│ MONGODB_URI      │ mongodb+srv://assesments:Chakravarthi@...        │
+│ JWT_SECRET       │ dev_only_secret_change_before_deploy_fa98sd...   │
+│ JWT_EXPIRES_IN   │ 7d                                               │
+│ CORS_ORIGIN      │ *                                                │
+│ NODE_ENV         │ production                                       │
+└──────────────────┴──────────────────────────────────────────────────┘
+
+Total: 5 environment variables
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+HOW TO ADD IN VERCEL DASHBOARD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Go to: https://vercel.com/dashboard
+2. Click on: your backend project (enterpriceflow_be or similar)
+3. Click: Settings → Environment Variables
+4. For EACH variable:
+   a. Click "Add New" (or "Edit" if it exists)
+   b. Enter the Key name (e.g., MONGODB_URI)
+   c. Copy-paste the Value EXACTLY from above
+   d. Select: Production, Preview, Development (all 3)
+   e. Click: Save
+
+5. After adding all 5, click: Redeploy
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VERIFICATION CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+After adding all variables, verify:
+☐ MONGODB_URI - Starts with "mongodb+srv://"
+☐ MONGODB_URI - Contains "erp_crm_prod" (NOT erp_crm_dev)
+☐ JWT_SECRET - Long alphanumeric string (60+ characters)
+☐ JWT_EXPIRES_IN - Exactly "7d"
+☐ CORS_ORIGIN - Set to "*" for now
+☐ NODE_ENV - Exactly "production"
+☐ All variables marked as "Sensitive" (normal in Vercel)
+☐ All variables selected for: Production, Preview, Development
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ After adding these, redeploy with: vercel --prod
+
+╚═══════════════════════════════════════════════════════════════╝
