@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import connectDB from '../config/db.js';
 import User from '../models/User.js';
 import Customer from '../models/Customer.js';
@@ -48,7 +49,7 @@ router.post('/seed-database', async (req, res) => {
     await Counter.deleteMany({});
     console.log('Cleared successfully');
 
-    // Create users
+    // Create users (one by one so password hashing pre-save hook fires)
     console.log('Creating users...');
     const users = [
       {
@@ -78,11 +79,13 @@ router.post('/seed-database', async (req, res) => {
     ];
 
     for (const userData of users) {
-      await User.create(userData);
+      const user = new User(userData);
+      user._id = new mongoose.Types.ObjectId();
+      await user.save();
     }
     console.log('Users created');
 
-    // Create customers
+    // Create customers (one by one with explicit _id to avoid serverless issue)
     console.log('Creating customers...');
     const customers = [
       {
@@ -123,10 +126,14 @@ router.post('/seed-database', async (req, res) => {
       }
     ];
 
-    await Customer.insertMany(customers);
+    for (const custData of customers) {
+      const customer = new Customer(custData);
+      customer._id = new mongoose.Types.ObjectId();
+      await customer.save();
+    }
     console.log('Customers created');
 
-    // Create products
+    // Create products (one by one with explicit _id to avoid serverless issue)
     console.log('Creating products...');
     const products = [
       {
@@ -195,12 +202,18 @@ router.post('/seed-database', async (req, res) => {
       }
     ];
 
-    await Product.insertMany(products);
+    for (const prodData of products) {
+      const product = new Product(prodData);
+      product._id = new mongoose.Types.ObjectId();
+      await product.save();
+    }
     console.log('Products created');
 
     // Initialize counter
     console.log('Creating counter...');
-    await Counter.create({ year: new Date().getFullYear(), sequence: 0 });
+    const counter = new Counter({ year: new Date().getFullYear(), sequence: 0 });
+    counter._id = new mongoose.Types.ObjectId();
+    await counter.save();
     console.log('Counter created');
 
     res.status(200).json({

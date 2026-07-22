@@ -167,18 +167,28 @@ const seedDatabase = async () => {
     
     console.log('✓ Cleared existing data');
 
-    // Create users
+    // Create users (one by one with explicit _id)
     for (const userData of users) {
-      await User.create(userData);
+      const user = new User(userData);
+      user._id = new mongoose.Types.ObjectId();
+      await user.save();
     }
     console.log('✓ Created 4 role users');
 
-    // Create customers
-    await Customer.insertMany(customers);
+    // Create customers (one by one with explicit _id)
+    for (const custData of customers) {
+      const customer = new Customer(custData);
+      customer._id = new mongoose.Types.ObjectId();
+      await customer.save();
+    }
     console.log('✓ Created sample customers');
 
-    // Create products
-    await Product.insertMany(products);
+    // Create products (one by one with explicit _id)
+    for (const prodData of products) {
+      const product = new Product(prodData);
+      product._id = new mongoose.Types.ObjectId();
+      await product.save();
+    }
     console.log('✓ Created sample products');
 
     console.log('\n========================================');
