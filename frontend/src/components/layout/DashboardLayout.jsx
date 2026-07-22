@@ -1,0 +1,19 @@
+import { Outlet } from 'react-router-dom';
+import Sidebar from './Sidebar';
+import Topbar from './Topbar';
+
+function DashboardLayout() {
+  return (
+    <div className="min-h-screen bg-bg">
+      <Sidebar />
+      <div className="ml-64">
+        <Topbar />
+        <main className="p-6">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}
+
+export default DashboardLayout;

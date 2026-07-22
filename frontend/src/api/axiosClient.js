@@ -21,11 +21,18 @@ axiosClient.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle errors
+// Response interceptor to handle errors and 401
 axiosClient.interceptors.response.use(
   (response) => response.data,
   (error) => {
     if (error.response) {
+      // Handle 401 - clear auth and redirect to login
+      if (error.response.status === 401) {
+        window.authToken = null;
+        // Dispatch custom event for AuthContext to pick up
+        window.dispatchEvent(new Event('unauthorized'));
+        window.location.href = '/login';
+      }
       // Server responded with error
       return Promise.reject(error.response.data);
     } else if (error.request) {

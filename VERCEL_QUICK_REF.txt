@@ -1,0 +1,94 @@
+╔════════════════════════════════════════════════════════════════╗
+║          Vercel Deployment - Quick Reference Card              ║
+╚════════════════════════════════════════════════════════════════╝
+
+📋 BEFORE YOU START
+────────────────────────────────────────────────────────────────
+1. Create Vercel account at: https://vercel.com/signup
+2. Push code to GitHub
+3. Have MongoDB Atlas connection string ready
+
+🔧 BACKEND DEPLOYMENT
+────────────────────────────────────────────────────────────────
+URL: https://vercel.com/new
+
+Step 1: Import Repository
+  → Click "Import" on your EnterpriseFlow repo
+
+Step 2: Configure
+  Framework Preset: Other
+  Root Directory: backend ← CLICK EDIT TO CHANGE!
+  
+Step 3: Environment Variables (Click to expand)
+  NODE_ENV          = production
+  MONGODB_URI       = mongodb+srv://user:pass@...
+  JWT_SECRET        = your_secret_here
+  JWT_EXPIRES_IN    = 7d
+  CORS_ORIGIN       = * (update later)
+
+Step 4: Deploy
+  → Click "Deploy" button
+  → Wait 2-5 minutes
+  → Copy URL: https://your-backend-xxx.vercel.app
+
+🌐 FRONTEND DEPLOYMENT
+────────────────────────────────────────────────────────────────
+URL: https://vercel.com/new (start over, same repo)
+
+Step 1: Import Repository
+  → Import SAME repository again
+
+Step 2: Configure
+  Framework Preset: Vite
+  Root Directory: frontend ← CLICK EDIT TO CHANGE!
+  Build Command: npm run build
+  Output Directory: dist
+
+Step 3: Environment Variable
+  VITE_API_URL = https://your-backend-xxx.vercel.app/api
+                 ↑ Use your actual backend URL + /api
+
+Step 4: Deploy
+  → Click "Deploy" button
+  → Wait 2-5 minutes
+  → Copy URL: https://your-frontend-xxx.vercel.app
+
+⚙️  UPDATE CORS (REQUIRED!)
+────────────────────────────────────────────────────────────────
+1. Go to backend project → Settings → Environment Variables
+2. Edit CORS_ORIGIN
+3. Change from * to: https://your-frontend-xxx.vercel.app
+4. Go to Deployments → Click "..." → Redeploy
+
+🌱 SEED DATABASE
+────────────────────────────────────────────────────────────────
+cd ~/Assesments/EnterpriseFlow/backend
+# Edit .env with Atlas URI
+npm run seed
+
+✅ TEST
+────────────────────────────────────────────────────────────────
+Open: https://your-frontend-xxx.vercel.app
+Login: admin@enterpriseflow.com / admin123
+
+🆘 TROUBLESHOOTING
+────────────────────────────────────────────────────────────────
+Blank page?
+  → Check browser console (F12)
+  → Verify VITE_API_URL is correct
+
+Login fails?
+  → Did you seed the database?
+  → Check backend health: /api/health
+
+CORS error?
+  → Update backend CORS_ORIGIN
+  → Redeploy backend
+
+Build fails?
+  → Check Vercel build logs
+  → Verify vercel.json exists
+
+📚 FULL GUIDE
+────────────────────────────────────────────────────────────────
+See VERCEL_SETUP_GUIDE.md for detailed step-by-step instructions

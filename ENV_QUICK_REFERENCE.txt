@@ -1,0 +1,215 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    VERCEL ENVIRONMENT VARIABLES                              ║
+║                         Quick Reference Card                                 ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  A. BACKEND - 5 Environment Variables                                        │
+│  (Vercel Dashboard → Backend Project → Settings → Environment Variables)    │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+1. MONGODB_URI
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ mongodb+srv://username:password@cluster.xxxxx.mongodb.net/         │
+   │ erp_crm_prod?retryWrites=true&w=majority                           │
+   └────────────────────────────────────────────────────────────────────┘
+   ⚠️  Get from: MongoDB Atlas → Connect → Connect your application
+   ⚠️  Replace: <password> with actual password, db name with erp_crm_prod
+
+2. JWT_SECRET
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6...         │
+   └────────────────────────────────────────────────────────────────────┘
+   ⚠️  Generate with: node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+   ⚠️  Must be: 64+ random characters
+
+3. JWT_EXPIRES_IN
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ 7d                                                                 │
+   └────────────────────────────────────────────────────────────────────┘
+   ⚠️  Means: Tokens expire after 7 days
+   ⚠️  Options: 1d, 12h, 24h, 7d, 30d
+
+4. CORS_ORIGIN
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ https://your-frontend-project.vercel.app                          │
+   └────────────────────────────────────────────────────────────────────┘
+   ⚠️  Must match: Your frontend Vercel URL exactly
+   ⚠️  Include: https:// (no trailing slash)
+   ⚠️  Update: After deploying frontend
+
+5. NODE_ENV
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ production                                                         │
+   └────────────────────────────────────────────────────────────────────┘
+   ⚠️  Must be: Exactly "production" (lowercase)
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  B. FRONTEND - 1 Environment Variable                                        │
+│  (Vercel Dashboard → Frontend Project → Settings → Environment Variables)   │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+1. VITE_API_URL
+   ┌────────────────────────────────────────────────────────────────────┐
+   │ https://your-backend-project.vercel.app/api                       │
+   └────────────────────────────────────────────────────────────────────┘
+   ⚠️  Must have: /api at the end
+   ⚠️  No trailing: slash after /api
+   ⚠️  Use: Your backend Vercel URL
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          DEPLOYMENT ORDER                                    ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Step 1: Setup MongoDB Atlas
+   → Create cluster
+   → Get connection string
+   → Whitelist 0.0.0.0/0
+
+Step 2: Deploy Backend
+   → Deploy to Vercel (get URL)
+   → Add 5 environment variables above
+   → CORS_ORIGIN = backend URL (temporary)
+   → Redeploy
+
+Step 3: Deploy Frontend  
+   → Deploy to Vercel (get URL)
+   → Add 1 environment variable above
+   → Redeploy
+
+Step 4: Update Backend CORS
+   → Change CORS_ORIGIN to frontend URL
+   → Redeploy backend
+
+Step 5: Seed Production Database
+   → Use connection string to seed
+   → npm run seed with production MONGODB_URI
+
+Step 6: Test
+   → Open frontend URL
+   → Login: admin@enterpriseflow.com / admin123
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          COMMON MISTAKES                                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+❌  MONGODB_URI = mongodb://localhost (local won't work)
+✅  MONGODB_URI = mongodb+srv://... (must be Atlas cloud)
+
+❌  CORS_ORIGIN = http://localhost:5173 (local)
+✅  CORS_ORIGIN = https://your-frontend.vercel.app (production)
+
+❌  VITE_API_URL = https://backend.vercel.app (missing /api)
+✅  VITE_API_URL = https://backend.vercel.app/api (with /api)
+
+❌  JWT_SECRET = secret (too simple)
+✅  JWT_SECRET = <64-char-random-string> (secure)
+
+❌  NODE_ENV = Development (wrong case)
+✅  NODE_ENV = production (lowercase)
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                       VERIFICATION CHECKLIST                                 ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Backend Verification:
+[ ] All 5 variables added to Vercel
+[ ] Backend deployed successfully
+[ ] Check deployment logs (no errors)
+[ ] Test: curl https://your-backend.vercel.app/api/health
+
+Frontend Verification:
+[ ] VITE_API_URL added to Vercel
+[ ] Frontend deployed successfully
+[ ] Open frontend URL in browser
+[ ] Login works (admin@enterpriseflow.com / admin123)
+[ ] Dashboard shows data (not loading forever)
+[ ] Check browser console (no CORS errors)
+
+Final Checks:
+[ ] All 4 role logins work
+[ ] Can create customer
+[ ] Can create product
+[ ] Can create challan
+[ ] Stock adjustments work
+[ ] No console errors
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                       TROUBLESHOOTING GUIDE                                  ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+"CORS Error" in browser:
+→ Check CORS_ORIGIN matches frontend URL exactly
+→ Redeploy backend after changing
+
+"Network Error" or API fails:
+→ Check VITE_API_URL has correct backend URL + /api
+→ Verify backend is deployed and running
+
+"MongoDB connection failed":
+→ Check connection string format
+→ Verify username/password correct
+→ Check IP whitelist includes 0.0.0.0/0
+
+Changes not reflecting:
+→ Must REDEPLOY after changing environment variables
+→ Go to Deployments → Latest → ⋯ → Redeploy
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         EXAMPLE VALUES                                       ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+BACKEND EXAMPLE:
+┌────────────────────────────────────────────────────────────────────────┐
+│ MONGODB_URI = mongodb+srv://admin:Pass123@cluster0.ab1cd.mongodb.net/ │
+│               erp_crm_prod?retryWrites=true&w=majority                 │
+│                                                                        │
+│ JWT_SECRET = a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6     │
+│                                                                        │
+│ JWT_EXPIRES_IN = 7d                                                    │
+│                                                                        │
+│ CORS_ORIGIN = https://enterpriseflow-fe.vercel.app                    │
+│                                                                        │
+│ NODE_ENV = production                                                  │
+└────────────────────────────────────────────────────────────────────────┘
+
+FRONTEND EXAMPLE:
+┌────────────────────────────────────────────────────────────────────────┐
+│ VITE_API_URL = https://enterpriseflow-be.vercel.app/api               │
+└────────────────────────────────────────────────────────────────────────┘
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    GENERATE JWT_SECRET COMMAND                               ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+Run this in terminal:
+┌────────────────────────────────────────────────────────────────────────┐
+│ node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"│
+└────────────────────────────────────────────────────────────────────────┘
+
+Or use OpenSSL:
+┌────────────────────────────────────────────────────────────────────────┐
+│ openssl rand -hex 64                                                   │
+└────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                              TOTAL VARIABLES
+═══════════════════════════════════════════════════════════════════════════════
+Backend:  5 variables
+Frontend: 1 variable
+Total:    6 variables
+
+Time to configure: ~10 minutes
+═══════════════════════════════════════════════════════════════════════════════
+
+Need detailed guide? See: VERCEL_ENV_VARIABLES.md
+Need deployment steps? See: DEPLOY_NOW.md
+
+Generated: July 22, 2026
